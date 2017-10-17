@@ -57,3 +57,9 @@ typings/
 # dotenv environment variables file
 .env
 
+#secrets
+firebase.json
+.firebaserc
+app/config/**
+!app/config/example-config.js
+app/secret/**
