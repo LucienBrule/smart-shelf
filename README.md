@@ -30,6 +30,9 @@ Lucien Brule <brulel@rpi.edu>
 
 1. Connect to your ftp server
 	- Download [FileZilla](https://filezilla-project.org/) , an FTP client
-	- if you're an RPI student you can use: ```yourercsid@rcs.rpi.edu``` , port 22
-	- this will host your webapp at ```homepages.rpi.edu/~yourrcsid```
+	- if you're an RPI student you can use: ```yourrcsid@rcs.rpi.edu``` , port 22
+	- this will host your web app at ```homepages.rpi.edu/~yourrcsid```
 2. upload the app folder
+
+### CLI Version (firebase deploy)
+1. run ```firebase deploy```
