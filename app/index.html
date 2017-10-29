@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="iotApp">
 
 <head>
 	<meta charset="utf-8">
@@ -7,7 +7,15 @@
 	<!-- Mobile First-->
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<!--  Include stuff-->
+	<!-- AngularJS -->
+	<!-- AngularJS -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+
+	<!-- Firebase -->
 	<script src="https://www.gstatic.com/firebasejs/4.5.2/firebase.js"></script>
+
+	<!-- AngularFire -->
+	<script src="https://cdn.firebase.com/libs/angularfire/2.3.0/angularfire.min.js"></script>
 
 	<!--  Bootstrap do not change this order-->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
@@ -15,13 +23,42 @@
 	<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 	<script src="/config/config.js"></script>
 	<style>
-	.rounded-corners{
-		border-radius: 10px;
-	}
+		.rounded-corners {
+			border-radius: 10px;
+		}
 	</style>
 </head>
 
-<body>
+<body ng-controller="iotCtrl">
+
+
+	<!-- Modal -->
+	<!-- Button trigger modal -->
+
+
+	<!-- Modal -->
+	<div ng-controller = "modalCtrl" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content row">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">Add A New Device</h4>
+	      </div>
+
+				<div class="input-group col-xs-8">
+					<span class="input-group-addon" id="basic-addon1">Name</span>
+					<input ng-model="devicename" type="text" class="form-control" placeholder="{{devicename}}" aria-describedby="basic-addon1">
+				</div>
+
+
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button ng-click="submitdevice()" type="button" data-dismiss="modal" class="btn btn-primary">Save changes</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
 	<nav class="navbar navbar-default">
 		<div class="container-fluid">
 			<div class="navbar-header">
@@ -31,20 +68,21 @@
 			</div>
 			<div class="navbar-right">
 				<ul class="nav navbar-nav navbar-right">
-			 <li class="dropdown">
-				 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-	 				 <img id="prof-pic" width="30" height="30" src="none.jpg" alt="Profile" class="rounded-corners">
-					 <span id="prof-name">Login</span>
-					 <span class="glyphicon glyphicon-cog" aria-hidden="true"></span></a>
-				 <ul class="dropdown-menu">
-					 <li><a href="#">Settings</a></li>
-					 <li><a href="#">Do Something</a></li>
-					 <li><a href="#">Do Something Else</a></li>
-					 <li role="separator" class="divider"></li>
-					 <li><a href="#">Log Out</a></li>
-				 </ul>
-			 </li>
-		 </ul>
+					<li class="dropdown">
+						<a  ng-click="login()" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+	 				 <img ng-if="user != null" id="prof-pic" width="30" height="30" ng-src="{{user.photoURL}}" alt="" class="rounded-corners">
+					 <span ng-if="user == null" >Login</span>
+					 <span ng-if="user != null" >{{user.displayName}}</span>
+					 <span ng-if="user != null" class="glyphicon glyphicon-cog" aria-hidden="true"></span></a>
+						<ul ng-if="user != null" class="dropdown-menu">
+							<li><a href="#">Settings</a></li>
+							<li><a href="#">Do Something</a></li>
+							<li><a href="#">Do Something Else</a></li>
+							<li role="separator" class="divider"></li>
+							<li><a ng-click="signout()" href="#">Log Out</a></li>
+						</ul>
+					</li>
+				</ul>
 			</div>
 		</div>
 	</nav>
@@ -60,15 +98,24 @@
 
 				<div class="dropdown">
 					<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-				    Fridge 1
+				    {{selected}}
 				    <span class="caret"></span>
 				  </button>
+
 					<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-						<li><a href="#">Fridge Shelf 1</a></li>
-						<li><a href="#">Fridge Shelf 2</a></li>
-						<li><a href="#">Pantry 1</a></li>
+						<li ng-repeat="device in devices"><a ng-click="setActiveDevice(device)" href="#">{{device}}</a></li>
 						<li role="separator" class="divider"></li>
-						<li><a href="#">Add New Device</a></li>
+						<li>
+
+							<a href="" type="button" data-toggle="modal" data-target="#myModal">
+								Add A New Device
+							</a>
+
+
+							<!-- <a href="#">Add New Device</a> -->
+
+
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -76,8 +123,9 @@
 		<div class="row">
 			<div class="col-xs-12">
 				<br />
+				<li ng-repeat="item in currentdevice">{{ item }}</li>
 				<div id="device-rep" class="well">
-					{self info goes here}
+					{shelf info goes here}
 				</div>
 			</div>
 		</div>
@@ -99,7 +147,7 @@
 			</div>
 		</div>
 	</div>
-	<script src="/js/app.js"></script>
+	<script src="js/app.js"></script>
 </body>
 
 </html>
