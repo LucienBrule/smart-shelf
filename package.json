@@ -1,0 +1,22 @@
+{
+  "name": "firebase-iot-starter",
+  "version": "1.0.0",
+  "description": "Starting point for firebase iot projects",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LucienBrule/firebase-iot-starter.git"
+  },
+  "author": "Lucien Brul",
+  "license": "BSD 2 Clause (See LICENSE)",
+  "bugs": {
+    "url": "https://github.com/LucienBrule/firebase-iot-starter/issues"
+  },
+  "homepage": "https://github.com/LucienBrule/firebase-iot-starter#readme",
+  "dependencies": {
+    "firebase-functions": "^0.7.2"
+  }
+}
