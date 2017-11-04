@@ -76,8 +76,6 @@
 					 <span ng-if="user != null" class="glyphicon glyphicon-cog" aria-hidden="true"></span></a>
 						<ul ng-if="user != null" class="dropdown-menu">
 							<li><a href="#">Settings</a></li>
-							<li><a href="#">Do Something</a></li>
-							<li><a href="#">Do Something Else</a></li>
 							<li role="separator" class="divider"></li>
 							<li><a ng-click="signout()" href="#">Log Out</a></li>
 						</ul>
@@ -98,7 +96,7 @@
 
 				<div class="dropdown">
 					<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-				    {{selected}}
+				    Device: {{selected}}
 				    <span class="caret"></span>
 				  </button>
 
@@ -110,11 +108,6 @@
 							<a href="" type="button" data-toggle="modal" data-target="#myModal">
 								Add A New Device
 							</a>
-
-
-							<!-- <a href="#">Add New Device</a> -->
-
-
 						</li>
 					</ul>
 				</div>
@@ -123,9 +116,8 @@
 		<div class="row">
 			<div class="col-xs-12">
 				<br />
-				<li ng-repeat="item in currentdevice">{{ item }}</li>
 				<div id="device-rep" class="well">
-					{shelf info goes here}
+					<li ng-repeat="item in currentdevice">{{ item }}</li>
 				</div>
 			</div>
 		</div>
@@ -137,7 +129,7 @@
 			</div>
 			<div class="col-sm-4 col-xs-12">
 				<button type="button" class="center-block btn btn-default btn-lg">
-					<span class="glyphicon  glyphicon-play" aria-hidden="true"></span> Do Something Else
+					<span class="glyphicon  glyphicon-play" aria-hidden="true"></span> Enroll Items
 				</button>
 			</div>
 			<div class="col-sm-4 col-xs-12">

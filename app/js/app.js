@@ -107,7 +107,7 @@ iotApp.controller('iotCtrl', function iotCtrl($scope, $firebaseObject, $firebase
 	$scope.ref = null;
 	$scope.obj = null;
 	$scope.auth = $firebaseAuth();
-	$scope.currentdevice = ["thing1", "thing2"];
+	// $scope.currentdevice = ["thing1", "thing2"];
 	if (!$scope.devices[0]) {
 		$scope.selected = "no devices :(";
 	} else {
@@ -118,6 +118,10 @@ iotApp.controller('iotCtrl', function iotCtrl($scope, $firebaseObject, $firebase
 		$scope.selected = device;
 		console.log($scope.currentdevice);
 	}
+	$scope.toggleOpenState = function(){
+
+	}
+
 	// $scope.currentdevice = null;
 	$scope.login = function() {
 		if ($scope.user == null) {
@@ -157,6 +161,8 @@ iotApp.controller('iotCtrl', function iotCtrl($scope, $firebaseObject, $firebase
 					console.log(key, value);
 				});
         $scope.currentdevice = obj.devices[0];
+				$scope.selected = $scope.currentdevice.name;
+				$scope.devices = obj.devices;
 			});
 
 		} else {
@@ -172,7 +178,7 @@ iotApp.controller('modalCtrl', function modalCtrl($scope, deviceService) {
 	$scope.devicename = "new device";
 	$scope.submitdevice = function() {
 		console.log($scope.devicename);
-		deviceService.addDevice($scope.devicename);
+		// deviceService.addDevice($scope.devicename);
 
 	}
 });
