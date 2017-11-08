@@ -61,4 +61,6 @@ typings/
 .firebaserc
 app/config/**
 !app/config/example-config.js
+!device/config/example-config.js
+device/config/**
 app/secret/**
