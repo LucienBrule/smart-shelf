@@ -10,7 +10,9 @@
   <!-- AngularJS -->
   <!-- AngularJS -->
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
-
+  <!--  Dater Picker-->
+  <script src="https://cdn.rawgit.com/restorando/angular-pickadate/master/dist/angular-pickadate.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/restorando/angular-pickadate/master/dist/angular-pickadate.css" />
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/4.5.2/firebase.js"></script>
 
@@ -37,7 +39,7 @@
   <!-- Button trigger modal -->
 
 
-  <!-- Modal -->
+  <!-- Device Modal -->
   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
       <div class="modal-content row">
@@ -55,6 +57,38 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           <button ng-click="submitdevice()" type="button" data-dismiss="modal" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Items Modal -->
+  <div class="modal fade" id="addItemModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content row">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Add An Item</h4>
+        </div>
+
+        <div class="input-group col-xs-8">
+          <span class="input-group-addon" id="newitem-name-descr">Name</span>
+          <input ng-model="newitem.name" type="text" class="form-control" aria-describedby="newitem-name-descr">
+        </div>
+
+        <div class="input-group col-xs-8">
+          <span class="input-group-addon" id="newitem-amount-descr">Amount</span>
+          <input ng-model="newitem.amount" type="number" class="form-control" aria-describedby="newitem-amount-descr">
+        </div>
+        <div class="input-group col-xs-8">
+          <span class="input-group-addon" id="newitem-date-descr">Date</span>
+          <div pickadate ng-model="newitem.expiry" format="dd/mm/yyyy" aria-describedby="newitem-date-descr"></div>
+        </div>
+
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button ng-click="addStoredItem()" type="button" data-dismiss="modal" class="btn btn-primary">Save changes</button>
         </div>
       </div>
     </div>
@@ -128,11 +162,9 @@
               <a ng-click="setActiveDevice(device)" href="#">{{device["name"]}}
 									<span ng-click="editDevice(device)" class=" pull-right glyphicon glyphicon-pencil"></span>
 								</a>
-
             </li>
             <li role="separator" class="divider"></li>
             <li>
-
               <a href="" type="button" data-toggle="modal" data-target="#myModal">
 								Add A New Device
 							</a>
@@ -141,39 +173,39 @@
         </div>
       </div>
     </div>
+
     <div class="row">
       <div class="col-xs-12">
         <br />
         <div id="device-rep" class="well">
-          <span>Door State: <span ng-bind="currentdevice['door-state']"></span></span>
+          <span ng-if="currentdevice.door-state != null">Door State: <span ng-bind="currentdevice['door-state']"></span></span>
           <br />
+
           <div ng-if="currentdevice.contents" class="items-container">
             <div class="items-content">
               <div ng-repeat="item in itemsArr">
                 <span ng-bind="item.name"></span>:
                 <span ng-bind="item.amount"></span>
-							</div>
-						</div>
-					</div>
-
-				</div>
-			</div>
-		</div>
-		<div class="row">
-
-			<div class=" col-xs-6">
-				<button ng-click="addStoredItem('test')" type="button" class="center-block btn btn-default btn-lg">
-					<span class="glyphicon  glyphicon-play" aria-hidden="true"></span> Add Items
-                </button>
-              </div>
-              <div class="col-xs-6">
-                <button ng-click="toggleDoorState()" type="button" class="center-block btn btn-default btn-lg">
-					<span class="glyphicon  glyphicon-play" aria-hidden="true"></span> Toggle Door State
-				</button>
+                <span ng-bind="item.expiry"></span>
               </div>
             </div>
           </div>
-          <script src="js/app.js"></script>
+        </div>
+      </div>
+      <div class="row">
+        <div class=" col-xs-6">
+          <button data-toggle="modal" data-target="#addItemModal" type="button" class="center-block btn btn-default btn-lg">
+					<span class="glyphicon  glyphicon-play" aria-hidden="true"></span> Add Items
+                </button>
+        </div>
+        <div class="col-xs-6">
+          <button ng-click="toggleDoorState()" type="button" class="center-block btn btn-default btn-lg">
+					<span class="glyphicon  glyphicon-play" aria-hidden="true"></span> Toggle Door State
+				</button>
+        </div>
+      </div>
+    </div>
+    <script src="js/app.js"></script>
 </body>
 
 </html>

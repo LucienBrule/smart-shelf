@@ -1,7 +1,7 @@
 // Initialize Firebase
 firebase.initializeApp(config);
 
-var iotApp = angular.module('iotApp', ["firebase"]);
+var iotApp = angular.module('iotApp', ["firebase", "pickadate"]);
 
 iotApp.service('deviceService', function() {
   var deviceList = [];
@@ -27,6 +27,8 @@ iotApp.controller('iotCtrl', function iotCtrl($scope, $firebaseObject, $firebase
   $scope.ref = null;
   $scope.obj = null;
   $scope.itemsRef = null;
+  $scope.newitem = null;
+  $scope.mindate = "2017-11-11";
   $scope.newdevicename = "new device";
   $scope.auth = $firebaseAuth();
   // $scope.currentdevice = ["thing1", "thing2"];
@@ -59,60 +61,58 @@ iotApp.controller('iotCtrl', function iotCtrl($scope, $firebaseObject, $firebase
   }
   $scope.runFirstTimeSetup = function() {
     console.log("Running First Time Setup");
-		console.log($scope.user);
+    console.log($scope.user);
     firebase.database().ref('users/' + $scope.user.uid).set({
       username: $scope.user.displayName,
       email: $scope.user.email,
       profile_picture: $scope.user.photoURL
     });
-		// firebase.database().ref('users/' + $scope.user.uid + "/devices/").set({
-		// 	"door-state": "closed",
-		// 	"name":"Fridge"
-		// });
+    // firebase.database().ref('users/' + $scope.user.uid + "/devices/").set({
+    // 	"door-state": "closed",
+    // 	"name":"Fridge"
+    // });
     $scope.submitdevice(prompt("What Should we call your first device?"));
     $scope.initScope();
   }
-	$scope.initScope = function(){
-		var ref = firebase.database().ref(`users/${$scope.user.uid}/`);
-		var obj = $firebaseObject(ref);
-		obj.$loaded(function(){
+  $scope.initScope = function() {
+    var ref = firebase.database().ref(`users/${$scope.user.uid}/`);
+    var obj = $firebaseObject(ref);
+    obj.$loaded(function() {
       // $scope.currentdevice = $firebaseObject(firebase.database().ref(`users/${$scope.user.uid}/devices/0`));
-			// $scope.selected = $scope.currentdevice.name;
-			$scope.devicesRef = firebase.database().ref(`users/${$scope.user.uid}/devices/`);
-			$scope.devicesArr = $firebaseArray($scope.devicesRef);
-      $scope.devicesArr.$loaded(function(){
+      // $scope.selected = $scope.currentdevice.name;
+      $scope.devicesRef = firebase.database().ref(`users/${$scope.user.uid}/devices/`);
+      $scope.devicesArr = $firebaseArray($scope.devicesRef);
+      $scope.devicesArr.$loaded(function() {
         $scope.currentdevice = $scope.devicesArr[0];
         $scope.itemsRef = firebase.database().ref(`users/${$scope.user.uid}/devices/${$scope.currentdevice.$id}/contents`);
         $scope.itemsArr = $firebaseArray($scope.itemsRef);
       })
-		})
-	}
-  $scope.deleteDevice = function(device){
+    })
+  }
+  $scope.deleteDevice = function(device) {
 
   }
-  $scope.editDevice = function(device){
+  $scope.editDevice = function(device) {
 
   }
   $scope.addStoredItem = function(item) {
     console.log("running addStoredItem");
     // var ref = firebase.database().ref(`users/${$scope.user.uid}/devices/0/contents`);
     var newRef = $scope.itemsRef.push();
-    var val = prompt("Enter an item to add");
-    var num = prompt("How many, " + val + " ?");
-    console.log("gonna add this item: " + val);
     var objToAdd = {
-      "name": val,
-      "amount": num
+      "name": $scope.newitem.name,
+      "amount": $scope.newitem.amount,
+      "expiry": $scope.newitem.expiry
     }
     // $scope.currentdevice.contents.push(objToAdd);
-    console.log($scope.currentdevice.contents);
+    console.log(objToAdd);
     newRef.set(objToAdd).then((data) => {
       console.log("added a thing probbably")
     });
     // console.log(list);
   }
   $scope.submitdevice = function(devicename) {
-    if( ! devicename){
+    if (!devicename) {
       devicename = $scope.newdevicename;
     }
     console.log("adding new device : " + devicename);
@@ -156,7 +156,7 @@ iotApp.controller('iotCtrl', function iotCtrl($scope, $firebaseObject, $firebase
   $scope.auth.$onAuthStateChanged(function(firebaseUser) {
     if (firebaseUser) {
       $scope.user = firebaseUser;
-			$scope.initScope();
+      $scope.initScope();
 
     } else {
       console.log("Signed out");
