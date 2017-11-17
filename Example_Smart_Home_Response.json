@@ -1,0 +1,46 @@
+{
+  "id": "e462e9c4-86cf-4272-b214-3f7d8404c881",
+  "timestamp": "2017-11-17T15:29:03.336Z",
+  "lang": "en",
+  "result": {
+    "source": "agent",
+    "resolvedQuery": "Add three carrots to the shelf, expires in a week",
+    "action": "",
+    "actionIncomplete": false,
+    "parameters": {
+      "Expiration": [
+        "in a week"
+      ],
+      "foodname": [
+        "carrots"
+      ],
+      "quantity": [
+        "three"
+      ],
+      "systime": ""
+    },
+    "contexts": [],
+    "metadata": {
+      "intentId": "93f2e53c-dc36-4e78-a536-6279d91ff4a9",
+      "webhookUsed": "false",
+      "webhookForSlotFillingUsed": "false",
+      "intentName": "add_item"
+    },
+    "fulfillment": {
+      "speech": "Adding carrots to shelf",
+      "messages": [
+        {
+          "type": 0,
+          "speech": "Adding carrots to shelf"
+        }
+      ]
+    },
+    "score": 1
+  },
+  "status": {
+    "code": 200,
+    "errorType": "success",
+    "webhookTimedOut": false
+  },
+  "sessionId": "daade74a-842a-42c3-ba85-b9227b053328"
+}
