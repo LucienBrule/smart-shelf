@@ -1,0 +1,25 @@
+{
+  "name": "device",
+  "version": "0.0.0",
+  "description": "Device Driver For IED Project",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LucienBrule/firebase-iot-starter.git"
+  },
+  "author": "Lucien Brule",
+  "license": "BSD 2 Clause",
+  "bugs": {
+    "url": "https://github.com/LucienBrule/firebase-iot-starter/issues"
+  },
+  "homepage": "https://github.com/LucienBrule/firebase-iot-starter#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "firebase": "^4.6.1",
+    "nunjucks": "^3.0.1"
+  }
+}
