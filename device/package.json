@@ -17,9 +17,14 @@
   },
   "homepage": "https://github.com/LucienBrule/firebase-iot-starter#readme",
   "dependencies": {
+    "angular": "^1.6.7",
     "body-parser": "^1.18.2",
+    "bootstrap": "^3.3.7",
     "express": "^4.16.2",
-    "firebase": "^4.6.1",
+    "firebase": "^4.6.2",
+    "jquery": "^3.2.1",
+    "nedb": "^1.8.0",
+    "node-persist": "^2.1.0",
     "nunjucks": "^3.0.1"
   }
 }

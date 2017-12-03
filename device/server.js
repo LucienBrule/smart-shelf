@@ -1,101 +1,48 @@
-var firebase = require("firebase");
-var config = require("./config/config.js");
-firebase.initializeApp(config.firebase);
-// console.log(firebase);
-const express = require('express')
-const nunjucks = require('nunjucks')
-const bodyParser = require('body-parser')
-const fs = require('fs');
+var express = require('express'),
+  nunjucks = require('nunjucks'),
+  config = require("./config/config"),
+  firebase = require("firebase"),
+  routes = require('./src/routes'),
+  app = express(),
+  device = require('./src/device'),
+  _ = require('./src/common');
+  api = require('./src/api');
 
-const app = express()
-nunjucks.configure('views', {
-  autoescape: true,
-  express: app
-})
-// app.use(bodyParser.json())
-app.use(express.json())
-app.use(express.static('public'))
+var self = module.exports = {
+  init: () => {
+    return new Promise((resolve, reject) => {
 
-app.get('/', (req, res) => {
-  res.render('index.html', {
-    title: "Smart Shelf",
-    client_id: config.oauth.client_id
-  });
-})
+      app.use(express.json())
+      app.use('/', routes);
+      app.use(express.static(__dirname + '/public'))
+      app.use('/scripts', express.static(__dirname + '/node_modules/'))
+      nunjucks.configure('views', {
+        autoescape: true,
+        express: app
+      })
+      firebase = firebase.initializeApp(config.firebase);
+      // Determine runtime environment
+      console.log("Debug status is: " + process.env.debug)
 
-app.post('/api/update-auth-state', (req, res) => {
-  // console.log(req.body.id_token);
-  if (!(req.body.id_token === 'undefined')) {
-    console.log("--> ID Token is defined.")
-    res.status(200).json({
-      ok: true
-    });
-  } else {
-    console.log("--> ID Token is NOT defined.")
-    return res.status(400).json({
-      ok: false
+      if (config.port) {
+        app.port = config.port
+      } else if (process.env.port) {
+        app.port = config.port
+      } else {
+        app.port = 3000
+      }
+      device.init().then(resolve()).catch((err) =>{
+        console.log("---> The device could not initalize because")
+        console.log(err.stack)
+      })
     });
   }
-  console.log("got here")
-
-  var id_token = req.body.id_token;
-  // Build Firebase credential with the Google ID token.
-  var credential = firebase.auth.GoogleAuthProvider.credential(id_token);
-
-  // Sign in with credential from the Google user.
-  firebase.auth().signInWithCredential(credential).catch(function(error) {
-    console.log(error);
-    // Handle Errors here.
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    // The email of the user's account used.
-    var email = error.email;
-    // The firebase.auth.AuthCredential type that was used.
-    var credential = error.credential;
-
-  });
-
-  firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-      // User is signed in.
-      var info = {
-        "displayName": user.displayName,
-        "email": user.email,
-        "emailVerified": user.emailVerified,
-        "photoURL": user.photoURL,
-        "uid": user.uid,
-        "providerData": user.providerData
-      }
-      console.log(info);
-      // Register watchers on example senors and report to firebase
-      fs.watch (config.device.sensorPath, (eventType, filename) => {
-        if (filename) {
-          console.log(filename);
-          fs.readFile(config.device.sensorPath + filename,"utf8",(err, data) => {
-            if (err) throw err;
-            console.log(data);
-          });
-          // Prints: <Buffer ...>
-        }
-      });
-
-
-
-
-    } else {
-      // User is signed out
-    }
-  });
-
-
-});
-
-app.get('/api/get-firebase-config', (req, res) => {
-  //TODO: This is pretty dirty maybe dont do this
-  // avoids having to have yet ANOTHER config file
-  res.status(200).send("var config = " + JSON.stringify(config.firebase));
+}
+self.init().then(
+  () => {
+    console.log("PORT: " + app.port);
+    app.listen(app.port, () => console.log('Server listening on port: ' + app.port));
+    console.log(api.load_local_id_token());
+  }).catch((reason) => {
+  console.log("The app could not initialize because:\n " + reason);
 })
-app.get('/api/get-device-info', (req, res) => {
-  res.status(200).json(config.device);
-})
-app.listen(3000, () => console.log('Server listening on port 3000...'))

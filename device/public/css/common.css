@@ -1,0 +1,11 @@
+html,body{
+  background: whitesmoke;
+}
+.rounded-corners {
+  border-radius: 10px;
+}
+
+.overflow-scroll{
+  overflow-x:scroll;
+  overflow-y: scroll;
+}

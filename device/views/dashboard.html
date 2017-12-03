@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>{{appName}}| {{pageName}} </title>
+  <script src="/scripts/angular/angular.min.js"></script>
+  <script src="/scripts/jquery/dist/jquery.min.js"></script>
+  <script src="/scripts/bootstrap/dist/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/scripts/bootstrap/dist/css/bootstrap.css">
+
+  <link rel="stylesheet" type="text/css" href="/css/common.css">
+  <script>
+    $('#myTabs a').click(function(e) {
+      e.preventDefault()
+      $(this).tab('show')
+    })
+  </script>
+</head>
+
+<body>
+  <!--  Top navbar -->
+  <div class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand">
+          <img alt="{{pageName}}" />
+        </a>
+      </div>
+      <div class="navbar-right">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expande="false">
+              <img src="{{user.photoURL}}" width="30" class="rounded-corners"/>
+              <span>{{user.displayName}}</span>
+              <span class="glyphicon glyphicon-cog ng-scope" arria-hidden="true"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="#">
+                Stuff
+              </a>
+              </li>
+              <li role="separator" class="divider"></li>
+              <li>
+                <a href="/logout">Logout</a>
+              </li>
+            </ul>
+        </ul>
+        </li>
+      </div>
+    </div>
+  </div>
+  <!-- End of the top navbar -->
+
+  <!-- Start of the pagination -->
+  <div class="container">
+
+    <!-- <ul class="nav nav-tabs nav-justified"> -->
+    <!-- <li role="presentation" class="active"><a href="#">Home</a> -->
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Info</a></li>
+      <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
+      <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
+      <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
+    </ul>
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane active" id="home">
+        <h1>Device Configuration</h1> {% for key,value in device %}
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">{{key}}</h3>
+          </div>
+          <div class="panel-body overflow-scroll">
+            {{value}}
+          </div>
+        </div>
+        {% endfor%}
+      </div>
+      <div role="tabpanel" class="tab-pane" id="profile">...</div>
+      <div role="tabpanel" class="tab-pane" id="messages">...</div>
+      <div role="tabpanel" class="tab-pane" id="settings">...</div>
+    </div>
+  </div>
+
+
+
+
+
+</body>
+
+</html>
