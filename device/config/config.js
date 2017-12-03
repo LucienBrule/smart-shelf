@@ -3,7 +3,7 @@
 // would be good to have an example config \(",)/
 module.exports= {
   env:"board",
-  port=3000,
+  port:5000,
   emulate_board :true,
   firebase :{
     apiKey: "AIzaSyCOaZ9tsQKDrL7batXIU9lr7N4A4aydkes",
