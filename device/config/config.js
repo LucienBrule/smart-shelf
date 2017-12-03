@@ -27,10 +27,10 @@ module.exports= {
     refreshTokenTime : 3000,
     sensorRefreshTime: 3000,
     sensors: [
-      {"pin":"P_33","type":"analog","name":"Q1"},
-      {"pin":"P_35","type":"analog","name":"Q2"},
-      {"pin":"P_37","type":"analog","name":"Q3"},
-      {"pin":"P_39","type":"analog","name":"Q4"}
+      {"pin":"P9_33","type":"analog","name":"Q1"},
+      {"pin":"P9_35","type":"analog","name":"Q2"},
+      {"pin":"P9_37","type":"analog","name":"Q3"},
+      {"pin":"P9_39","type":"analog","name":"Q4"}
     ]
   },
   oauth:{
