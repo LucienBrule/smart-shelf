@@ -13,6 +13,7 @@ self = module.exports = {
       // Determine the environment
       if (process.env.device == "board") {
         config.device = "board"
+        config.emulate_board = false;
       }
       if (process.env.device == "board-emulate") {
         config.env = "board"
