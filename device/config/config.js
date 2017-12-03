@@ -25,7 +25,7 @@ module.exports= {
     boardAPI:"bonescript",
     mockBoardAPI:"./mock/mock-bonescript",
     refreshTokenTime : 3000,
-    sensorRefreshTime: 1000,
+    sensorRefreshTime: 3000,
     sensors: [
       {"pin":"P_33","type":"analog","name":"Q1"},
       {"pin":"P_35","type":"analog","name":"Q2"},
