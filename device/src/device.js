@@ -54,19 +54,19 @@ self = module.exports = {
     var modsensor = []
     for(var i = 0; i < config.device.sensors.length; i++){
       var sensor = config.device.sensors[i];
-      console.log(sensor);
-      if(sensor.type == "analog"){
-        board.analogRead(sensor.pin,(data,error)=>{
-          if(error){
-            console.log(error);
-          }
-          if(data){
-            console.log(`Read sensor ${sensor.name} : ${data.value.toFixed(4)}`);
-            modsensor.push({name:sensor.name,value:data.value})
-            sensorPack.sensors = modsensor;
-          }
-        })
-      }
+      console.log(sensor.name);
+      // if(sensor.type == "analog"){
+      //   board.analogRead(sensor.pin,(data,error)=>{
+      //     if(error){
+      //       console.log(error);
+      //     }
+      //     if(data){
+      //       console.log(`Read sensor ${sensor.name} : ${data.value.toFixed(4)}`);
+      //       modsensor.push({name:sensor.name,value:data.value})
+      //       sensorPack.sensors = modsensor;
+      //     }
+      //   })
+      // }
     }
     console.log(sensorPack);
     // _.emitter.emit("newSensorData",sensorPack);
