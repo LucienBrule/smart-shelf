@@ -6,7 +6,7 @@ var express = require('express'),
   app = express(),
   device = require('./src/device'),
   _ = require('./src/common');
-  api = require('./src/api');
+api = require('./src/api');
 
 var self = module.exports = {
   init: () => {
@@ -26,15 +26,20 @@ var self = module.exports = {
 
       if (config.port) {
         app.port = config.port
-      } else if (process.env.port) {
+      }
+      else if (process.env.port) {
         app.port = config.port
-      } else {
+      }
+      else {
         app.port = 3000
       }
-      device.init().then(resolve()).catch((err) =>{
+      device.init().then(resolve()).catch((err) => {
         console.log("---> The device could not initalize because")
         console.log(err.stack)
       })
+      process.on('unhandledRejection', (reason, p) => {
+        console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
+      });
     });
   }
 }

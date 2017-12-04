@@ -15,7 +15,8 @@ module.exports= {
   },
   firebaserefs:{
     debugDataPath:"/users/lDKu7HgC8GQklFeJ21Fyim3jy2B3/devices/-KyOp-uCFCHGoRgkzALa/",
-    deviceRef:"/-KyOp-uCFCHGoRgkzALa/"
+    deviceRef:"/-KyOp-uCFCHGoRgkzALa/",
+    shouldTakeMeasurement: "/users/lDKu7HgC8GQklFeJ21Fyim3jy2B3/devices/-KyOp-uCFCHGoRgkzALa/shouldTakeMeasurement"
   },
   device :{
     uniqueName:"MajesticDiscoUnicorn",
@@ -25,6 +26,7 @@ module.exports= {
     generatedConfig:"./config/generatedConfig/",
     boardAPI:"bonescript",
     mockBoardAPI:"./mock/mock-bonescript",
+    sigmaDelta: 0.1,
     refreshTokenTime : 3000,
     sensorRefreshTime: 3000,
     sensors: [

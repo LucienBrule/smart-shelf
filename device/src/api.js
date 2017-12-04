@@ -14,7 +14,7 @@ var storage_ready = storage.init({
   fdb = {},
   self = module.exports = {
     is_logged_in_to_firebase: false,
-    current_auth_credential : {},
+    current_auth_credential: {},
     SUCCESS: {
       "status": "ok"
     },
@@ -25,15 +25,33 @@ var storage_ready = storage.init({
       if (!self.is_logged_in_to_firebase) return;
 
       console.log("API: got new sensor data " + data.timestamp);
-      console.log(data);
-      if(process.env.silent == "true") {
+
+      if (process.env.silent == "true") {
         console.log("Not reporting to firebase")
         return
       }
+      console.log(data);
 
+      if (process.env.quiet == "true") {
+        console.log("Not reporting to firebase")
+        return
+      }
       var sensorDataRef = fdb.ref(config.firebaserefs.debugDataPath + "/data")
       var newDataRef = sensorDataRef.push();
       newDataRef.set(data);
+    },
+    handle_item_probably_added: (data) => {
+      if (!self.is_logged_in_to_firebase) return;
+      console.log("API: Item probably added")
+
+      if (process.env.silent == "true") {
+        console.log("Not reporting to firebase")
+        return
+      }
+      var dataRef = fdb.ref(config.firebaserefs.debugDataPath + "/deltas")
+      var newDataRef = dataRef.push();
+      newDataRef.set(data);
+
     },
     get_firebase_config: (req, res) => {
       //TODO: This is pretty dirty maybe dont do this
@@ -47,7 +65,7 @@ var storage_ready = storage.init({
       }
       return status;
     },
-    get_device_id: (req,res) =>{
+    get_device_id: (req, res) => {
       res.send(config.firebaserefs.deviceRef);
     },
     logout: (req, res, next) => {
@@ -61,7 +79,8 @@ var storage_ready = storage.init({
             if (_.isRequest(req, res)) {
               console.log("there was an error AA")
               res.status(500).json(self.FAILURE);
-            } else {
+            }
+            else {
               return false;
             }
           }
@@ -70,10 +89,12 @@ var storage_ready = storage.init({
             if (_.isDefined(next)) {
               console.log("passing along")
               next(req, res)
-            } else {
+            }
+            else {
               res.status(200).json(self.SUCCESS);
             }
-          } else {
+          }
+          else {
             return true;
           }
         })
@@ -103,7 +124,8 @@ var storage_ready = storage.init({
     make_restricted_area: (req, res, next) => {
       if (!firebase.auth().currentUser) {
         res.redirect('/');
-      } else {
+      }
+      else {
         return next();
       }
     },
@@ -153,17 +175,18 @@ var storage_ready = storage.init({
     test_find_db: (req, res) => {
       res.send(db.find());
     },
-    get_auth_credential: (req,res) =>{
-      res.send(JSON.stringify(self.current_auth_credential ));
+    get_auth_credential: (req, res) => {
+      res.send(JSON.stringify(self.current_auth_credential));
     },
     update_auth_state: (req, res, saved_token) => {
       console.log("running update auth")
-      // console.log(saved_token);
+        // console.log(saved_token);
       var id_token;
       if (req) {
         if (!(req.body.id_token === 'undefined')) {
           id_token = req.body.id_token
-        } else {
+        }
+        else {
           console.log("Unsuccesfull auth handshake")
           return res.status(400).json({
             ok: false
@@ -173,7 +196,8 @@ var storage_ready = storage.init({
             client_id: config.oauth.client_id
           });
         }
-      } else {
+      }
+      else {
         id_token = saved_token;
       }
       storage_ready.then(storage.setItem('id_token', id_token));
@@ -229,7 +253,8 @@ var storage_ready = storage.init({
               console.log(`Recoverable Error: ${filename} removed`);
             }
           });
-        } else {
+        }
+        else {
           self.is_logged_in_to_firebase = false;
           // User is signed out
         }
@@ -240,8 +265,12 @@ var storage_ready = storage.init({
 
 
 _.emitter.on("FirebaseConnected", () => {
-   fdb = firebase.database()
-  // var sensorDataRef = fdb.ref(config.firebaserefs.debugDataPath)
-  // sensorDataRef.once('value').then((data)=>{console.log(data.val())})
+  fdb = firebase.database()
+    // var sensorDataRef = fdb.ref(config.firebaserefs.debugDataPath)
+    // sensorDataRef.once('value').then((data)=>{console.log(data.val())})
+  fdb.ref(config.firebaserefs.shouldTakeMeasurement).on('value', (snapshot) => {
+    _.emitter.emit("shouldReadSensors")
+  });
   _.emitter.on("newSensorData", self.handle_sensor_data);
+  _.emitter.on("itemProbablyAdded", self.handle_item_probably_added);
 })
