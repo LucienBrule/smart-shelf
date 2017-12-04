@@ -22,7 +22,7 @@ module.exports= {
     sensorfilename:"weightsensor",
     datastorePath:"./config/datastore/datastore",
     generatedConfig:"./config/generatedConfig/",
-    boardAPI:"bonescript",
+    boardAPI:"/usr/local/lib/node_modules/bonescript",
     mockBoardAPI:"./mock/mock-bonescript",
     refreshTokenTime : 3000,
     sensorRefreshTime: 3000,
