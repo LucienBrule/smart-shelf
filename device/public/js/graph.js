@@ -8,28 +8,28 @@ var width = 1000,
 var groups = {
   Q1: {
     value: 0,
-    color: 'orange',
+    color: 'purple',
     data: d3.range(limit).map(function() {
       return 0
     })
   },
   Q2: {
     value: 0,
-    color: 'orange',
+    color: 'yellow',
     data: d3.range(limit).map(function() {
       return 0
     })
   },
   Q3: {
     value: 0,
-    color: 'orange',
+    color: 'red',
     data: d3.range(limit).map(function() {
       return 0
     })
   },
   Q4: {
     value: 0,
-    color: 'orange',
+    color: 'blue',
     data: d3.range(limit).map(function() {
       return 0
     })

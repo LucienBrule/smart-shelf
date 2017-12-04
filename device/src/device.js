@@ -39,7 +39,7 @@ self = module.exports = {
       //   console.log(`BOARD arch ${data.os.arch}`);
       // });
       // Register our control function interval timer
-      setInterval(self.readSensors, config.device.sensorRefreshTime)
+      // setInterval(self.readSensors, config.device.sensorRefreshTime)
 
       // Register our even handlers for new data
       _.emitter.on("shouldReadSensors", self.handle_should_read_sensors)
@@ -51,7 +51,7 @@ self = module.exports = {
   sigmaDelta: config.device.sigmaDelta,
   oldSensorPack: null,
   calculateDeltas: (newSensorPack) => {
-    console.log("DEVICE: Calculating deltas")
+    // console.log("DEVICE: Calculating deltas")
     if (self.oldSensorPack == null) {
       self.oldSensorPack = newSensorPack;
       return
@@ -61,7 +61,7 @@ self = module.exports = {
     for (var i = 0; i < newSensorPack.sensors.length; i++) {
       deltas[i] = new Promise((resolve, reject) => {
         var delta = newSensorPack.sensors[i].value - self.oldSensorPack.sensors[i].value;
-        console.log(JSON.stringify(newSensorPack.sensors[i].value) + " - " + JSON.stringify(self.oldSensorPack.sensors[i].value) + " = " + delta)
+        // console.log(JSON.stringify(newSensorPack.sensors[i].value) + " - " + JSON.stringify(self.oldSensorPack.sensors[i].value) + " = " + delta)
 
         if (isNaN(delta)) {
           delta = 0.0;
@@ -86,6 +86,13 @@ self = module.exports = {
         // console.log(self.oldSensorPack)
       if (meanDelta > self.sigmaDelta) {
         _.emitter.emit("itemProbablyAdded", deltaPack);
+        console.log("DEVICE: delta avg: " + deltaPack.avg)
+
+      }
+      else if ((-1 * meanDelta) > self.sigmaDelta) {
+        _.emitter.emit("itemProbablyRemoved", deltaPack);
+        console.log("DEVICE: delta avg: " + deltaPack.avg)
+
       }
       self.oldSensorPack = newSensorPack;
 
@@ -93,8 +100,9 @@ self = module.exports = {
 
     })
   },
-  readSensors: () => {
-    console.log("DEVICE: Reading sensors")
+  readSensors: (opt) => {
+
+    // console.log("DEVICE: Reading sensors")
     var sensorPack = {
       tstart: Date.now()
     }
@@ -121,11 +129,18 @@ self = module.exports = {
     Promise.all(sensorReadings).then((values) => {
         sensorPack["timestamp"] = Date.now();
         sensorPack["sensors"] = values
-        _.emitter.emit("newSensorData", sensorPack);
+        if (opt && opt.noNotify) {
+          _.emitter.emit("newSensorData.noNotify", sensorPack);
+
+        }
+        else {
+          _.emitter.emit("newSensorData", sensorPack);
+
+        }
       })
       // console.log(sensorPack);
   },
-  handle_should_read_sensors: () => {
-    self.readSensors();
+  handle_should_read_sensors: (opt) => {
+    self.readSensors(opt);
   }
 }

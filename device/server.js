@@ -11,7 +11,7 @@ api = require('./src/api');
 var self = module.exports = {
   init: () => {
     return new Promise((resolve, reject) => {
-
+      console.log("_____ starting _____")
       app.use(express.json())
       app.use('/', routes);
       app.use(express.static(__dirname + '/public'))
@@ -22,8 +22,9 @@ var self = module.exports = {
       })
       firebase = firebase.initializeApp(config.firebase);
       // Determine runtime environment
-      console.log("Debug status is: " + process.env.debug)
-
+      if (process.env.debug == "true") {
+        console.log("DEBUG mode enabled ")
+      }
       if (config.port) {
         app.port = config.port
       }
@@ -31,7 +32,7 @@ var self = module.exports = {
         app.port = config.port
       }
       else {
-        app.port = 3000
+        app.port = 3001
       }
       device.init().then(resolve()).catch((err) => {
         console.log("---> The device could not initalize because")
@@ -45,9 +46,10 @@ var self = module.exports = {
 }
 self.init().then(
   () => {
-    console.log("PORT: " + app.port);
+    console.log("Running on port: " + app.port);
     app.listen(app.port, () => console.log('Server listening on port: ' + app.port));
-    console.log(api.load_local_id_token());
+    console.log("_____ ready _____")
+
   }).catch((reason) => {
   console.log("The app could not initialize because:\n " + reason);
 })

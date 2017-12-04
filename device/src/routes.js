@@ -13,7 +13,7 @@ router.route('api/test-find-db').get(api.test_find_db);
 router.route('/api/logout').get(api.make_restricted_area, api.logout);
 router.route('/api/get-auth-credential/').get(api.make_restricted_area,api.get_auth_credential);
 router.route('/api/get-device-id/').get(api.make_restricted_area,api.get_device_id);
-
+router.route('/api/get-sensor-data').get(api.get_sensor_data);
 router.route('/logout').get(api.make_restricted_area, api.logout, (req, res) => {
   console.log("redirecting them")
   res.redirect('/');

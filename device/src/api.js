@@ -23,17 +23,20 @@ var storage_ready = storage.init({
     },
     handle_sensor_data: (data) => {
       if (!self.is_logged_in_to_firebase) return;
-
-      console.log("API: got new sensor data " + data.timestamp);
+      var buf = ""
+      for(var sensor in data.sensors){
+        buf += data.sensors[sensor].name + ": " + data.sensors[sensor].value.toFixed(3) + " "
+      }
+      console.log("API: new sensor data: " + buf );
 
       if (process.env.silent == "true") {
-        console.log("Not reporting to firebase")
+        // console.log("Not reporting to firebase")
         return
       }
-      console.log(data);
+      // console.log(data);
 
       if (process.env.quiet == "true") {
-        console.log("Not reporting to firebase")
+        // console.log("Not reporting to firebase")
         return
       }
       var sensorDataRef = fdb.ref(config.firebaserefs.debugDataPath + "/data")
@@ -45,13 +48,26 @@ var storage_ready = storage.init({
       console.log("API: Item probably added")
 
       if (process.env.silent == "true") {
-        console.log("Not reporting to firebase")
+        // console.log("Not reporting to firebase")
         return
       }
       var dataRef = fdb.ref(config.firebaserefs.debugDataPath + "/deltas")
       var newDataRef = dataRef.push();
       newDataRef.set(data);
 
+    },
+    handle_item_probably_removed: (data) =>{
+      if (!self.is_logged_in_to_firebase) return;
+      console.log("API: Item probably removed")
+
+      if (process.env.silent == "true") {
+        // console.log("Not reporting to firebase")
+        return
+      }
+      var dataRef = fdb.ref(config.firebaserefs.debugDataPath + "/deltas")
+      var newDataRef = dataRef.push();
+      newDataRef.set(data);
+      
     },
     get_firebase_config: (req, res) => {
       //TODO: This is pretty dirty maybe dont do this
@@ -77,7 +93,6 @@ var storage_ready = storage.init({
           if (err) {
             console.log(err);
             if (_.isRequest(req, res)) {
-              console.log("there was an error AA")
               res.status(500).json(self.FAILURE);
             }
             else {
@@ -99,6 +114,14 @@ var storage_ready = storage.init({
           }
         })
       });
+    },
+    get_sensor_data: (req,res) => {
+        function eventHandler(data){
+          res.send(JSON.stringify(data))
+          _.emitter.removeListener("newSensorData.noNotify",eventHandler);
+        }
+        _.emitter.emit("shouldReadSensors",{"noNotify":true})
+        _.emitter.on("newSensorData.noNotify",eventHandler)
     },
     get_user_info: (req, res) => {
       var user = {
@@ -273,4 +296,6 @@ _.emitter.on("FirebaseConnected", () => {
   });
   _.emitter.on("newSensorData", self.handle_sensor_data);
   _.emitter.on("itemProbablyAdded", self.handle_item_probably_added);
+  _.emitter.on("itemProbablyRemoved", self.handle_item_probably_removed);
+
 })
