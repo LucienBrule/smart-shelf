@@ -12,7 +12,7 @@ self = module.exports = {
     return new Promise((resolve, reject) => {
       // Determine the environment
       if (process.env.device == "board") {
-        config.device = "board"
+        config.env = "board"
         config.emulate_board = false;
       }
       if (process.env.device == "board-emulate") {
@@ -23,6 +23,7 @@ self = module.exports = {
       if (config.env == "board") {
         if (config.emulate_board) {
           console.log("emulating the board")
+          console.log("boar api is mocked: " + config.device.mockBoardAPI)
           board = require(config.device.mockBoardAPI)
         } else {
           console.log("using bonescript ")
