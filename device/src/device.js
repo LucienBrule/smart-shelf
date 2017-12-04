@@ -54,9 +54,9 @@ self = module.exports = {
       if(sensor.type == "analog"){
         board.analogRead(sensor.pin,(data)=>{
           // console.log(`Read sensor ${sensor.name} : ${data.value.toFixed(4)}`);
-          console.log(data.value)
           sensor.value = data.value;
           sensorPack.sensors.push(sensor);
+          console.log(sensor);
         })
       }
     }
