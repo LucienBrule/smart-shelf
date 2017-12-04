@@ -14,6 +14,7 @@ var storage_ready = storage.init({
   fdb = {},
   self = module.exports = {
     is_logged_in_to_firebase: false,
+    current_auth_credential : {},
     SUCCESS: {
       "status": "ok"
     },
@@ -25,6 +26,11 @@ var storage_ready = storage.init({
 
       console.log("API: got new sensor data " + data.timestamp);
       console.log(data);
+      if(process.env.silent == "true") {
+        console.log("Not reporting to firebase")
+        return
+      }
+
       var sensorDataRef = fdb.ref(config.firebaserefs.debugDataPath + "/data")
       var newDataRef = sensorDataRef.push();
       newDataRef.set(data);
@@ -40,6 +46,9 @@ var storage_ready = storage.init({
         res.send(status);
       }
       return status;
+    },
+    get_device_id: (req,res) =>{
+      res.send(config.firebaserefs.deviceRef);
     },
     logout: (req, res, next) => {
       storage_ready.then(() => {
@@ -144,6 +153,9 @@ var storage_ready = storage.init({
     test_find_db: (req, res) => {
       res.send(db.find());
     },
+    get_auth_credential: (req,res) =>{
+      res.send(JSON.stringify(self.current_auth_credential ));
+    },
     update_auth_state: (req, res, saved_token) => {
       console.log("running update auth")
       // console.log(saved_token);
@@ -168,7 +180,6 @@ var storage_ready = storage.init({
       // Build Firebase credential with the Google ID token.
       var credential = firebase.auth.GoogleAuthProvider.credential(id_token);
       // console.log(credential);
-
       // Sign in with credential from the Google user.
       firebase.auth().signInWithCredential(credential).catch(function(error) {
         console.log(error);
@@ -183,6 +194,7 @@ var storage_ready = storage.init({
       });
       firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
+          self.current_auth_credential = credential;
           self.is_logged_in_to_firebase = true;
           console.log("Successfully signed into firebase")
           _.emitter.emit("FirebaseConnected")

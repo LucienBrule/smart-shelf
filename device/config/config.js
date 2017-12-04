@@ -14,7 +14,8 @@ module.exports= {
     messagingSenderId: "2482262027"
   },
   firebaserefs:{
-    debugDataPath:"/users/lDKu7HgC8GQklFeJ21Fyim3jy2B3/devices/-KyOp-uCFCHGoRgkzALa/"
+    debugDataPath:"/users/lDKu7HgC8GQklFeJ21Fyim3jy2B3/devices/-KyOp-uCFCHGoRgkzALa/",
+    deviceRef:"/-KyOp-uCFCHGoRgkzALa/"
   },
   device :{
     uniqueName:"MajesticDiscoUnicorn",

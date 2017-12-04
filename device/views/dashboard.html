@@ -8,8 +8,10 @@
   <script src="/scripts/jquery/dist/jquery.min.js"></script>
   <script src="/scripts/bootstrap/dist/js/bootstrap.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/scripts/bootstrap/dist/css/bootstrap.css">
-
   <link rel="stylesheet" type="text/css" href="/css/common.css">
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/4.5.2/firebase.js"></script>
+  <script src="/api/get-firebase-config"></script>
   <script>
     $('#myTabs a').click(function(e) {
       e.preventDefault()
@@ -60,8 +62,8 @@
     <!-- <li role="presentation" class="active"><a href="#">Home</a> -->
     <ul class="nav nav-tabs" role="tablist">
       <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Info</a></li>
-      <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
-      <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
+      <li role="presentation"><a href="#graph" aria-controls="graph" role="tab" data-toggle="tab">Graph</a></li>
+      <li role="presentation"><a href="#data" aria-controls="data" role="tab" data-toggle="tab">Data</a></li>
       <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
     </ul>
     <div class="tab-content">
@@ -80,18 +82,20 @@
       <div role="tabpanel" class="tab-pane" id="graph">
         <h1>Graph</h1>
         <div class="graph"></div>
+        <link rel="stylesheet" type="text/css" href="/css/graph.css">
         <script src="http://d3js.org/d3.v3.min.js"></script>
-        <script src="/graph.js"></script>
       </div>
-      <div role="tabpanel" class="tab-pane" id="messages">...</div>
+      <div role="tabpanel" class="tab-pane" id="data">
+        <div id = "data-pile">
+        </div>
+
+      </div>
       <div role="tabpanel" class="tab-pane" id="settings">...</div>
     </div>
   </div>
 
-
-
-
-
+  <script src="/js/graph.js"></script>
+  <script src="/js/dashboard.js"></script>
 </body>
 
 </html>

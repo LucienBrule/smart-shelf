@@ -11,6 +11,9 @@ router.route('/api/update-auth-state').post(api.update_auth_state)
 router.route('/api/test-data-store').get(api.test_data_store);
 router.route('api/test-find-db').get(api.test_find_db);
 router.route('/api/logout').get(api.make_restricted_area, api.logout);
+router.route('/api/get-auth-credential/').get(api.make_restricted_area,api.get_auth_credential);
+router.route('/api/get-device-id/').get(api.make_restricted_area,api.get_device_id);
+
 router.route('/logout').get(api.make_restricted_area, api.logout, (req, res) => {
   console.log("redirecting them")
   res.redirect('/');
