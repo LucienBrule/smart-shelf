@@ -24,7 +24,7 @@ var storage_ready = storage.init({
       if (!self.is_logged_in_to_firebase) return;
 
       console.log("API: got new sensor data " + data.timestamp);
-
+      console.log(data);
       var sensorDataRef = fdb.ref(config.firebaserefs.debugDataPath + "/data")
       var newDataRef = sensorDataRef.push();
       newDataRef.set(data);

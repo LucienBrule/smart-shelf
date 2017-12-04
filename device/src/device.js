@@ -56,7 +56,6 @@ self = module.exports = {
           // console.log(`Read sensor ${sensor.name} : ${data.value.toFixed(4)}`);
           sensor.value = data.value;
           sensorPack.sensors.push(sensor);
-          console.log(sensor);
         })
       }
     }
