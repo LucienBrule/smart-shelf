@@ -16,5 +16,8 @@ self = module.exports = {
   isRequest: (req, res) => {
     return self.isDefined(req) && self.isDefined(res);
   },
+  copyValue: (tocopy) => {
+    return JSON.parse(JSON.stringify(tocopy));
+  },
   emitter : new events.EventEmitter()
 }
