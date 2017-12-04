@@ -49,6 +49,8 @@ self = module.exports = {
     _.emitter.emit("DebugEvent","Tesing the event emitter");
     console.log("DEVICE: Reading sensors")
     var sensorPack = {timestamp:Date.now(),sensors:[]}
+    console.log(config.device.sensors);
+    console.log(config.device.sensors.length)
     for(var i = 0; i < config.device.sensors.length; i++){
       var sensor = config.device.sensors[i];
       if(sensor.type == "analog"){
