@@ -26,7 +26,7 @@ self = module.exports = {
           board = require(config.device.mockBoardAPI)
         } else {
           console.log("using bonescript ")
-          console.log(config.device.boardAPI)
+          console.log("board api is: " + config.device.boardAPI)
           board = require(config.device.boardAPI);
         }
       }
