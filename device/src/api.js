@@ -229,7 +229,7 @@ var storage_ready = storage.init({
 
 _.emitter.on("FirebaseConnected", () => {
    fdb = firebase.database()
-  var sensorDataRef = fdb.ref(config.firebaserefs.debugDataPath)
-  sensorDataRef.once('value').then((data)=>{console.log(data.val())})
+  // var sensorDataRef = fdb.ref(config.firebaserefs.debugDataPath)
+  // sensorDataRef.once('value').then((data)=>{console.log(data.val())})
   _.emitter.on("newSensorData", self.handle_sensor_data);
 })

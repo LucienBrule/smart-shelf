@@ -23,9 +23,10 @@ self = module.exports = {
       if (config.env == "board") {
         if (config.emulate_board) {
           console.log("emulating the board")
-          console.log("boar api is mocked: " + config.device.mockBoardAPI)
+          console.log("board api is mocked: " + config.device.mockBoardAPI)
           board = require(config.device.mockBoardAPI)
-        } else {
+        }
+        else {
           console.log("using bonescript ")
           console.log("board api is: " + config.device.boardAPI)
           board = require(config.device.boardAPI);
@@ -38,16 +39,17 @@ self = module.exports = {
       //   console.log(`BOARD arch ${data.os.arch}`);
       // });
       // Register our control function interval timer
-      setInterval(self.readSensors,config.device.sensorRefreshTime)
+      setInterval(self.readSensors, config.device.sensorRefreshTime)
 
       // Register our even handlers for new data
 
       resolve();
     });
   },
-  readSensors : () => {
-    _.emitter.emit("DebugEvent","Tesing the event emitter");
+  readSensors: () => {
+    _.emitter.emit("DebugEvent", "Tesing the event emitter");
     console.log("DEVICE: Reading sensors")
+<<<<<<< HEAD
     var sensorPack = {timestamp:Date.now(),sensors:[]}
     console.log(config.device.sensors);
     console.log(config.device.sensors.length)
@@ -68,6 +70,34 @@ self = module.exports = {
     }
     console.log(sensorPack);
     // _.emitter.emit("newSensorData",sensorPack);
+=======
+    var sensorPack = {tstart:Date.now()}
+    var sensorReadings = config.device.sensors.map((sensor) => {
+      return new Promise((resolve, reject) => {
+        var report = {}
+        if (sensor.type == "analog") {
+          board.analogRead(sensor.pin, (data) => {
+            if (data.err) {
+              console.log(data.err);
+              reject(new Error('couldnt read sensor'));
+            }
+            if (data.value) {
+              // console.log(`Read sensor ${sensor.name} : ${data.value.toFixed(4)}`);
+              report["value"] = data.value;
+              report["name"] = sensor.name;
+              resolve(report);
+            }
+          });
+        }
+      })
+    });
+
+    Promise.all(sensorReadings).then( (values) =>{
+      sensorPack["timestamp"] = Date.now();
+      sensorPack["sensors"] = values
+      _.emitter.emit("newSensorData",sensorPack);
+    })
+>>>>>>> d7459728088951c67dbdd0f835cd4b70f4ee5ee2
     // console.log(sensorPack);
   }
 }
