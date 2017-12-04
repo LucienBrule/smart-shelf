@@ -49,28 +49,6 @@ self = module.exports = {
   readSensors: () => {
     _.emitter.emit("DebugEvent", "Tesing the event emitter");
     console.log("DEVICE: Reading sensors")
-<<<<<<< HEAD
-    var sensorPack = {timestamp:Date.now(),sensors:[]}
-    console.log(config.device.sensors);
-    console.log(config.device.sensors.length)
-    var modsensor = []
-    for(var i = 0; i < config.device.sensors.length; i++){
-      var sensor = config.device.sensors[i];
-      console.log(sensor.name);
-        board.analogRead(sensor.pin,(data)=>{
-          if(data.err){
-            console.console.error(data.err);
-          }
-          if(data.value){
-            console.log(`Read sensor ${sensor.name} : ${data.value.toFixed(4)}`);
-            modsensor.push({name:sensor.name,value:data.value})
-            sensorPack.sensors = modsensor;
-          }
-        })
-    }
-    console.log(sensorPack);
-    // _.emitter.emit("newSensorData",sensorPack);
-=======
     var sensorPack = {tstart:Date.now()}
     var sensorReadings = config.device.sensors.map((sensor) => {
       return new Promise((resolve, reject) => {
@@ -97,7 +75,6 @@ self = module.exports = {
       sensorPack["sensors"] = values
       _.emitter.emit("newSensorData",sensorPack);
     })
->>>>>>> d7459728088951c67dbdd0f835cd4b70f4ee5ee2
     // console.log(sensorPack);
   }
 }
