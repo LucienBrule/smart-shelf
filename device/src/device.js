@@ -26,15 +26,16 @@ self = module.exports = {
           board = require(config.device.mockBoardAPI)
         } else {
           console.log("using bonescript ")
+          console.log(config.device.boardAPI)
           board = require(config.device.boardAPI);
         }
       }
       // Don't do stuff if we're on the dev machine
-      board.getPlatform((data)=>{
-        console.log(`BOARD name ${data.name}`);
-        console.log(`BOARD hostname ${data.os.hostname}`);
-        console.log(`BOARD arch ${data.os.arch}`);
-      });
+      // board.getPlatform((data)=>{
+      //   console.log(`BOARD name ${data.name}`);
+      //   console.log(`BOARD hostname ${data.os.hostname}`);
+      //   console.log(`BOARD arch ${data.os.arch}`);
+      // });
       // Register our control function interval timer
       setInterval(self.readSensors,config.device.sensorRefreshTime)
 
