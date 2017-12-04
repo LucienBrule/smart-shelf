@@ -14,6 +14,7 @@ router.route('/api/logout').get(api.make_restricted_area, api.logout);
 router.route('/api/get-auth-credential/').get(api.make_restricted_area,api.get_auth_credential);
 router.route('/api/get-device-id/').get(api.make_restricted_area,api.get_device_id);
 router.route('/api/get-sensor-data').get(api.get_sensor_data);
+router.route('/api/debug/force-emit-delta').get(api.test_force_emit_delta);
 router.route('/logout').get(api.make_restricted_area, api.logout, (req, res) => {
   console.log("redirecting them")
   res.redirect('/');

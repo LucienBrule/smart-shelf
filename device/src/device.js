@@ -84,15 +84,21 @@ self = module.exports = {
       deltaPack["timestamp"] = Date.now()
         // console.log(deltaPack)
         // console.log(self.oldSensorPack)
+      var either = false;
       if (meanDelta > self.sigmaDelta) {
+        either = true;
         _.emitter.emit("itemProbablyAdded", deltaPack);
         console.log("DEVICE: delta avg: " + deltaPack.avg)
 
       }
       else if ((-1 * meanDelta) > self.sigmaDelta) {
+        either = true;
         _.emitter.emit("itemProbablyRemoved", deltaPack);
         console.log("DEVICE: delta avg: " + deltaPack.avg)
 
+      }
+      if(either){
+        _.emitter.emit("itemProbablyChanged",deltaPack)
       }
       self.oldSensorPack = newSensorPack;
 

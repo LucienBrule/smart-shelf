@@ -25,6 +25,7 @@
     "jquery": "^3.2.1",
     "nedb": "^1.8.0",
     "node-persist": "^2.1.0",
-    "nunjucks": "^3.0.1"
+    "nunjucks": "^3.0.1",
+    "request": "^2.83.0"
   }
 }

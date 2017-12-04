@@ -24,10 +24,10 @@ var storage_ready = storage.init({
     handle_sensor_data: (data) => {
       if (!self.is_logged_in_to_firebase) return;
       var buf = ""
-      for(var sensor in data.sensors){
+      for (var sensor in data.sensors) {
         buf += data.sensors[sensor].name + ": " + data.sensors[sensor].value.toFixed(3) + " "
       }
-      console.log("API: new sensor data: " + buf );
+      console.log("API: new sensor data: " + buf);
 
       if (process.env.silent == "true") {
         // console.log("Not reporting to firebase")
@@ -56,7 +56,7 @@ var storage_ready = storage.init({
       newDataRef.set(data);
 
     },
-    handle_item_probably_removed: (data) =>{
+    handle_item_probably_removed: (data) => {
       if (!self.is_logged_in_to_firebase) return;
       console.log("API: Item probably removed")
 
@@ -67,7 +67,7 @@ var storage_ready = storage.init({
       var dataRef = fdb.ref(config.firebaserefs.debugDataPath + "/deltas")
       var newDataRef = dataRef.push();
       newDataRef.set(data);
-      
+
     },
     get_firebase_config: (req, res) => {
       //TODO: This is pretty dirty maybe dont do this
@@ -94,8 +94,7 @@ var storage_ready = storage.init({
             console.log(err);
             if (_.isRequest(req, res)) {
               res.status(500).json(self.FAILURE);
-            }
-            else {
+            } else {
               return false;
             }
           }
@@ -104,24 +103,24 @@ var storage_ready = storage.init({
             if (_.isDefined(next)) {
               console.log("passing along")
               next(req, res)
-            }
-            else {
+            } else {
               res.status(200).json(self.SUCCESS);
             }
-          }
-          else {
+          } else {
             return true;
           }
         })
       });
     },
-    get_sensor_data: (req,res) => {
-        function eventHandler(data){
-          res.send(JSON.stringify(data))
-          _.emitter.removeListener("newSensorData.noNotify",eventHandler);
-        }
-        _.emitter.emit("shouldReadSensors",{"noNotify":true})
-        _.emitter.on("newSensorData.noNotify",eventHandler)
+    get_sensor_data: (req, res) => {
+      function eventHandler(data) {
+        res.send(JSON.stringify(data))
+        _.emitter.removeListener("newSensorData.noNotify", eventHandler);
+      }
+      _.emitter.emit("shouldReadSensors", {
+        "noNotify": true
+      })
+      _.emitter.on("newSensorData.noNotify", eventHandler)
     },
     get_user_info: (req, res) => {
       var user = {
@@ -147,8 +146,7 @@ var storage_ready = storage.init({
     make_restricted_area: (req, res, next) => {
       if (!firebase.auth().currentUser) {
         res.redirect('/');
-      }
-      else {
+      } else {
         return next();
       }
     },
@@ -201,15 +199,75 @@ var storage_ready = storage.init({
     get_auth_credential: (req, res) => {
       res.send(JSON.stringify(self.current_auth_credential));
     },
+    test_force_emit_delta: (req, res) => {
+      var sp1 = {
+        tstart: 1512428845269,
+        timestamp: 1512428845269,
+        sensors: [{
+            value: 0.9557997558,
+            name: 'Q1'
+          },
+          {
+            value: 0.956043956,
+            name: 'Q2'
+          },
+          {
+            value: 0.9565323565,
+            name: 'Q3'
+          },
+          {
+            value: 0.9565323565,
+            name: 'Q4'
+          }
+        ]
+      };
+      var sp2 = {
+        tstart: 1512428845269,
+        timestamp: 15124288,
+        sensors: [{
+            value: 0.5,
+            name: 'Q1'
+          },
+          {
+            value: 0.5,
+            name: 'Q2'
+          },
+          {
+            value: 0.5,
+            name: 'Q3'
+          },
+          {
+            value: 0.5,
+            name: 'Q4'
+          }
+        ]
+      }
+      if(req.query.action){
+        if(req.query.action == "add"){
+          _.emitter.emit("newSensorData",sp2);
+          _.emitter.emit("newSensorData",sp1);
+        }
+        else if(req.query.action == "remove"){
+          _.emitter.emit("newSensorData",sp1);
+          _.emitter.emit("newSensorData",sp2);
+        }else{
+          res.status(400).json(self.FAILURE);
+        }
+      }else{
+        _.emitter.emit("newSensorData",sp2);
+        _.emitter.emit("newSensorData",sp1);
+      }
+
+      res.json(self.SUCCESS);
+    },
     update_auth_state: (req, res, saved_token) => {
       console.log("running update auth")
-        // console.log(saved_token);
+      // console.log(saved_token);
       var id_token;
       if (req) {
         if (!(req.body.id_token === 'undefined')) {
           id_token = req.body.id_token
-        }
-        else {
+        } else {
           console.log("Unsuccesfull auth handshake")
           return res.status(400).json({
             ok: false
@@ -219,8 +277,7 @@ var storage_ready = storage.init({
             client_id: config.oauth.client_id
           });
         }
-      }
-      else {
+      } else {
         id_token = saved_token;
       }
       storage_ready.then(storage.setItem('id_token', id_token));
@@ -276,8 +333,7 @@ var storage_ready = storage.init({
               console.log(`Recoverable Error: ${filename} removed`);
             }
           });
-        }
-        else {
+        } else {
           self.is_logged_in_to_firebase = false;
           // User is signed out
         }
@@ -289,9 +345,27 @@ var storage_ready = storage.init({
 
 _.emitter.on("FirebaseConnected", () => {
   fdb = firebase.database()
-    // var sensorDataRef = fdb.ref(config.firebaserefs.debugDataPath)
-    // sensorDataRef.once('value').then((data)=>{console.log(data.val())})
-  fdb.ref(config.firebaserefs.shouldTakeMeasurement).on('value', (snapshot) => {
+  // var sensorDataRef = fdb.ref(config.firebaserefs.debugDataPath)
+  // sensorDataRef.once('value').then((data)=>{console.log(data.val())})
+  fdb.ref(config.firebaserefs.debugShouldTakeMeasurementPath).on('value', (snapshot) => {
+    console.log("API: got command from firebase to read sensors");
+    var val = snapshot.val();
+    if (!val) {
+      console.log("API: -- command was false")
+      return;
+    }
+    if (val == "debug") {
+      // Ideally shouldReadSensors will happen, then a delta will be sent up and watched by a function
+      var w_ref = "users/lDKu7HgC8GQklFeJ21Fyim3jy2B3/devices/-KyOp-uCFCHGoRgkzALa/contents/-L-YZWKSuUrMsnIQJBOn" + "/weight"
+
+      _.emitter.once("newSensorData", (data) => {
+        console.log(data);
+      });
+      _.emitter.once("itemProbablyChanged", (data) => {
+        fdb.ref(w_ref).set(data);
+      });
+    }
+
     _.emitter.emit("shouldReadSensors")
   });
   _.emitter.on("newSensorData", self.handle_sensor_data);
