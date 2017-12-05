@@ -23,11 +23,7 @@ var storage_ready = storage.init({
     },
     handle_sensor_data: (data) => {
       if (!self.is_logged_in_to_firebase) return;
-      var buf = ""
-      for (var sensor in data.sensors) {
-        buf += data.sensors[sensor].name + ": " + data.sensors[sensor].value.toFixed(3) + " "
-      }
-      console.log("API: new sensor data: " + buf);
+
 
       if (process.env.silent == "true") {
         // console.log("Not reporting to firebase")

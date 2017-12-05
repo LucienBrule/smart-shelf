@@ -39,7 +39,7 @@ self = module.exports = {
       //   console.log(`BOARD arch ${data.os.arch}`);
       // });
       // Register our control function interval timer
-      // setInterval(self.readSensors, config.device.sensorRefreshTime)
+      setInterval(self.readSensors, config.device.sensorRefreshTime)
 
       // Register our even handlers for new data
       _.emitter.on("shouldReadSensors", self.handle_should_read_sensors)
@@ -134,7 +134,13 @@ self = module.exports = {
 
     Promise.all(sensorReadings).then((values) => {
         sensorPack["timestamp"] = Date.now();
-        sensorPack["sensors"] = values
+        sensorPack["sensors"] = values;
+        // console.log(sensorPack);
+        var buf = ""
+        for (var sensor in sensorPack.sensors) {
+          buf += sensorPack.sensors[sensor].name + ": " + sensorPack.sensors[sensor].value.toFixed(3) + " "
+        }
+        console.log("DEVICE: new sensor data: " + buf);
         if (opt && opt.noNotify) {
           _.emitter.emit("newSensorData.noNotify", sensorPack);
 
