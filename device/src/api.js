@@ -242,23 +242,27 @@ var storage_ready = storage.init({
           }
         ]
       }
-      if(req.query.action){
-        if(req.query.action == "add"){
-          _.emitter.emit("newSensorData",sp2);
-          _.emitter.emit("newSensorData",sp1);
-        }
-        else if(req.query.action == "remove"){
-          _.emitter.emit("newSensorData",sp1);
-          _.emitter.emit("newSensorData",sp2);
-        }else{
+      if (req.query.action) {
+        if (req.query.action == "remove") {
+          _.emitter.emit("newSensorData", sp2);
+          _.emitter.emit("newSensorData", sp1);
+        } else if (req.query.action == "add") {
+          _.emitter.emit("newSensorData", sp1);
+          _.emitter.emit("newSensorData", sp2);
+        } else {
           res.status(400).json(self.FAILURE);
         }
-      }else{
-        _.emitter.emit("newSensorData",sp2);
-        _.emitter.emit("newSensorData",sp1);
+      } else {
+        _.emitter.emit("newSensorData", sp2);
+        _.emitter.emit("newSensorData", sp1);
+      }
+      if (res) {
+        res.json(self.SUCCESS);
+
+      } else {
+        return true;
       }
 
-      res.json(self.SUCCESS);
     },
     update_auth_state: (req, res, saved_token) => {
       console.log("running update auth")
@@ -348,13 +352,14 @@ _.emitter.on("FirebaseConnected", () => {
   // var sensorDataRef = fdb.ref(config.firebaserefs.debugDataPath)
   // sensorDataRef.once('value').then((data)=>{console.log(data.val())})
   fdb.ref(config.firebaserefs.debugShouldTakeMeasurementPath).on('value', (snapshot) => {
-    console.log("API: got command from firebase to read sensors");
+    console.log("API: firebase command point changed");
     var val = snapshot.val();
     if (!val) {
       console.log("API: -- command was false")
       return;
     }
     if (val == "debug") {
+      console.log("API: running debug measurement")
       // Ideally shouldReadSensors will happen, then a delta will be sent up and watched by a function
       var w_ref = "users/lDKu7HgC8GQklFeJ21Fyim3jy2B3/devices/-KyOp-uCFCHGoRgkzALa/contents/-L-YZWKSuUrMsnIQJBOn" + "/weight"
 
@@ -364,9 +369,29 @@ _.emitter.on("FirebaseConnected", () => {
       _.emitter.once("itemProbablyChanged", (data) => {
         fdb.ref(w_ref).set(data);
       });
+      self.test_force_emit_delta({
+        "query": {
+          "action": "add"
+        }
+      });
+    } else {
+      // oh dip we're live here
+      console.log("API: got command from firebase to update weight")
+      console.log("API: -- waiting on sensors to change")
+      var w_ref = val + "/weight";
+      _.emitter.once("newSensorData", (data) => {
+        console.log(data);
+      });
+      _.emitter.once("itemProbablyChanged", (data) => {
+        var p1 = fdb.ref(w_ref).set(data);
+        var p2 = fdb.ref(config.firebaserefs.debugShouldTakeMeasurementPath).set(false);
+        Promise.all([p1, p2]).then(() => {
+          console.log("API: sent deltas to firebase")
+        })
+      });
+      _.emitter.emit("shouldReadSensors")
     }
 
-    _.emitter.emit("shouldReadSensors")
   });
   _.emitter.on("newSensorData", self.handle_sensor_data);
   _.emitter.on("itemProbablyAdded", self.handle_item_probably_added);
