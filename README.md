@@ -1,6 +1,11 @@
-# Fireabse IOT Starter
+# Smart Shelf
 Lucien Brule <brulel@rpi.edu>
 
+* TODO: Clean dev of specific config files, allow multiple devices and merge to master.
+* If you came here looking for my RPI IED firease-iot-project template checkout master@a3a663effb4e87a1ca1d911ac989ef858470fff7 I have included the old instructions below:
+
+
+-----
 > Make your IoT project easier to make.
 
 # Getting Started
